@@ -1,20 +1,18 @@
-![](https://dungeoneer-dota2.com/images/banner.png)
-###### This repository belongs to the project *Dungeoneer* - a Dota 2 custom game.
-- *You are here*
-- [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=1595235870 "Steam Workshop")
-- [Discord](https://discord.gg/nFT3Dew "Discord")
-- Email: sniqi.dev@gmail.com
+# a custom Darts App (Microsoft Windows)
+This is my attempt to create a Darts app that exactly matches our needs as we play Darts.
+As all of the Darts apps (Windows or iOS/Android) did not satisfy our needs, I decided to make an App on my own.
+We're succefully using it since 2018.
 
 # Content of ths repo
 
-This repository does NOT include the whole "runnable" Dota 2 custom game.
-It includes all script/KV files with the following file extensions:
+This repository does NOT include the whole runnable Visual Studio project.
+It includes all files with the following file extensions:
 
-.lua
+.cs
+.xaml
+.config
+.manifest
 .txt
-.js
-.css
-.xml
 
 # License
 *MIT License*
