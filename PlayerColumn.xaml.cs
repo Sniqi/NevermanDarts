@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Automation;
+using System.Windows.Automation.Peers;
+using System.Windows.Automation.Provider;
 
 namespace NevermanDarts
 {
@@ -27,11 +31,15 @@ namespace NevermanDarts
 
         MainWindow MW;
 
+        ListBoxAutomationPeer svAutomation;
+
         public PlayerColumn(MainWindow mw)
         {
             InitializeComponent();
 
             MW = mw;
+
+            svAutomation = (ListBoxAutomationPeer)ScrollViewerAutomationPeer.CreatePeerForElement(listBox_history);
         }
 
         public void SetPlayerID(int PlayerID)
@@ -140,6 +148,8 @@ namespace NevermanDarts
 
             listBox_history.Items.Add(trennung_txt);
             MW.AddHistoryEntry(trennung_txt);
+
+            scrollToBottom();
         }
 
         public void AddHistoryEntry(int score, int newScore, bool bust, bool finish)
@@ -160,106 +170,15 @@ namespace NevermanDarts
                 MW.AddHistoryEntry(score.ToString() + " = " + newScore.ToString() + " (WIN)");
             }
 
-            listBox_history.ScrollIntoView(listBox_history.Items[listBox_history.Items.Count - 1]);
-
-            /*
-
-            int currentScore = Convert.ToInt32(label_playerScore.Content);
-            int newScore = currentScore - score;
-
-            darts_count++;
-
-            string trennung_txt = "--- Würfe: " + darts_count + " ---";
-
-            if (score > 0)
-            {
-                listBox_history.Items.Add(currentScore.ToString() + " - " + score + " = " + newScore);
-                MW.AddHistoryEntry(currentScore.ToString() + " - " + score + " = " + newScore);
-
-                if (trennung == true)
-                {
-                    listBox_history.Items.Add(trennung_txt);
-                    MW.AddHistoryEntry(trennung_txt);
-                }
-
-                SetPlayerScore(newScore);
-
-                CalculateAvg(score);
-
-                listBox_history.ScrollIntoView(listBox_history.Items[listBox_history.Items.Count - 1]);
-                return "default";
-            }
-            else if(newScore == 0)
-            {
-                listBox_history.Items.Add(currentScore.ToString() + " - " + score + " = " + newScore + " (Win)");
-                MW.AddHistoryEntry(currentScore.ToString() + " - " + score + " = " + newScore + " (Win)");
-
-                listBox_history.Items.Add(trennung_txt);
-                MW.AddHistoryEntry(trennung_txt);
-
-                SetPlayerScore(newScore);
-
-                bool SetWon = IncrementLegs();
-
-                if (SetWon)
-                {
-                    bool GameWon = IncrementSets();
-
-                    if (GameWon)
-                    {
-                        listBox_history.ScrollIntoView(listBox_history.Items[listBox_history.Items.Count - 1]);
-                        return "game_won";
-                    }
-
-                    listBox_history.ScrollIntoView(listBox_history.Items[listBox_history.Items.Count - 1]);
-                    return "set_won";
-                }
-                else
-                {
-                    listBox_history.ScrollIntoView(listBox_history.Items[listBox_history.Items.Count - 1]);
-                    return "leg_won";
-                }
-            }
-            else if (newScore < 0)
-            {
-                listBox_history.Items.Add(currentScore.ToString() + " - " + score + " = " + newScore + " (!)");
-                MW.AddHistoryEntry(currentScore.ToString() + " - " + score + " = " + newScore + " (!)");
-
-                listBox_history.Items.Add(trennung_txt);
-                MW.AddHistoryEntry(trennung_txt);
-
-                CalculateAvg(0);
-
-                listBox_history.ScrollIntoView(listBox_history.Items[listBox_history.Items.Count - 1]);
-                return "bust";
-            }
-
-            listBox_history.ScrollIntoView(listBox_history.Items[listBox_history.Items.Count - 1]);
-            
-            return "default";
-
-            */
+            scrollToBottom();
         }
 
         public void RemoveLastHistoryEntry()
         {
-            //int currentScore = Convert.ToInt32(label_playerScore.Content);
-
             string currentLine = listBox_history.Items.GetItemAt(listBox_history.Items.Count - 1).ToString();
 
             if (currentLine.Contains("---"))
             {
-                //listBox_history.Items.Remove(listBox_history.Items.GetItemAt(listBox_history.Items.Count - 1));
-                /*
-                for (int n = listBox_history.Items.Count - 1; n >= 0; --n)
-                {
-                    string removelistitem = currentLine;
-                    if (listBox_history.Items[n].ToString().Contains(removelistitem))
-                    {
-                        listBox_history.Items.RemoveAt(n);
-                    }
-                }
-                */
                 listBox_history.Items.RemoveAt(listBox_history.Items.Count - 1);
 
                 currentLine = listBox_history.Items.GetItemAt(listBox_history.Items.Count - 1).ToString();
@@ -267,34 +186,12 @@ namespace NevermanDarts
                 MW.RemoveLastHistoryEntry();
             }
 
-            //int score = Convert.ToInt32(currentLine.Split(' ')[2].Trim());
-
-            //listBox_history.Items.Remove(listBox_history.Items.GetItemAt(listBox_history.Items.Count - 1));
-            /*
-            for (int n = listBox_history.Items.Count - 1; n >= 0; --n)
-            {
-                string removelistitem = currentLine;
-                if (listBox_history.Items[n].ToString().Contains(removelistitem))
-                {
-                    listBox_history.Items.RemoveAt(n);
-                }
-            }
-            */
             listBox_history.Items.RemoveAt(listBox_history.Items.Count - 1);
 
             MW.RemoveLastHistoryEntry();
 
-            /*
-            if (!currentLine.Contains("(!)"))
-            {
-                int newScore = currentScore + score;
-                SetPlayerScore(newScore);
-            }
-            */
-
             if (listBox_history.Items.Count > 0)
-                listBox_history.ScrollIntoView(listBox_history.Items[listBox_history.Items.Count - 1]);
-
+                scrollToBottom();
         }
 
         public void ResetLegs()
@@ -340,6 +237,21 @@ namespace NevermanDarts
                 return false;
             }
 
+        }
+
+        private void scrollToBottom()
+        {
+            IScrollProvider scrollInterface = (IScrollProvider)svAutomation.GetPattern(PatternInterface.Scroll);
+            ScrollAmount scrollVertical = ScrollAmount.LargeIncrement;
+            ScrollAmount scrollHorizontal = ScrollAmount.NoAmount;
+
+            try
+            {
+                scrollInterface.Scroll(scrollHorizontal, scrollVertical);
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }
