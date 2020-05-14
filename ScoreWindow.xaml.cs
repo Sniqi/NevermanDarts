@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace NevermanDarts
 {
@@ -39,6 +40,8 @@ namespace NevermanDarts
         private int Shot_ID;
         private int Darts_ID;
 
+        DispatcherTimer pauseTimer = new DispatcherTimer();
+
         public ScoreWindow(Menu m, MainWindow mw, int Game_ID)
         {
             InitializeComponent();
@@ -48,11 +51,27 @@ namespace NevermanDarts
 
             sql = menu.sql;
             this.Game_ID = Game_ID;
+
+            pauseTimer.Tick += new EventHandler(pauseTimer_Tick);
+            pauseTimer.Interval = new TimeSpan(0, 5, 0);
         }
 
         public void Set_soundVolume(int vol)
         {
             m_mediaPlayer.Volume = Convert.ToDouble(vol) / 100.0f;
+        }
+
+        public void Set_pauseLength(int minutes)
+        {
+            pauseTimer.Interval = new TimeSpan(0, minutes, 0);
+        }
+
+        private void pauseTimer_Tick(object sender, EventArgs e)
+        {
+            m_mediaPlayer.Open(new Uri(AppDomain.CurrentDomain.BaseDirectory + "\\BoatHorn.wav"));
+            m_mediaPlayer.Play();
+
+            pauseTimer.Stop();
         }
 
         public int DB_Create_Set(int SetNo)
@@ -413,6 +432,8 @@ namespace NevermanDarts
                     {
                         m_mediaPlayer.Open(new Uri(AppDomain.CurrentDomain.BaseDirectory + "\\The Darts Anthem - Chase The Sun.wav"));
                         m_mediaPlayer.Play();
+
+                        pauseTimer.Start();
                     }
                 }
                 else

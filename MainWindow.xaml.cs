@@ -151,7 +151,15 @@ namespace NevermanDarts
 
         private void slider_pauseLength_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            try
+            {
+                scoreWindow.Set_pauseLength(Convert.ToInt16(slider_pauseLength.Value));
+                label_pauseLength.Content = Convert.ToInt16(slider_pauseLength.Value) + " min";
+            }
+            catch (Exception)
+            {
 
+            }
         }
 
 
