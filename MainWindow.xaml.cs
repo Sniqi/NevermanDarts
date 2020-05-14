@@ -121,7 +121,12 @@ namespace NevermanDarts
 
         private void button_nextPlayer_Click(object sender, RoutedEventArgs e)
         {
-            //scoreWindow.NextPlayer();
+            scoreWindow.NextPlayer();
+        }
+
+        public void disableNextPlayerButton()
+        {
+            button_nextPlayer.IsEnabled = false;
         }
 
         private void slider_soundVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -137,7 +142,17 @@ namespace NevermanDarts
             }
         }
 
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            scoreWindow.Close();
 
+            menu.Visibility = Visibility.Visible;
+        }
+
+        private void slider_pauseLength_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
+        }
 
 
 
@@ -2212,17 +2227,5 @@ namespace NevermanDarts
             Path score = sender as Path;
             Score_MouseLeftButtonUp(score);
         }
-
-
-
-
-
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            scoreWindow.Close();
-
-            menu.Visibility = Visibility.Visible;
-        }
-
     }
 }

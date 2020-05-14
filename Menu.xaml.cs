@@ -103,6 +103,8 @@ namespace NevermanDarts
             textBox_addPlayer_LastName.Text = "";
             textBox_addPlayer_Alias.Text = "";
 
+            textBox_addPlayer_FirstName.Focus();
+
             DB_LoadPlayers();
         }
 
@@ -257,7 +259,7 @@ namespace NevermanDarts
 
             // Insert Game Settings
             SQL_Text = string.Format("INSERT INTO Settings (Game_ID, Mode, Legs, Sets, Pause) VALUES({0},{1},{2},{3},{4})",
-                Game_ID, Mode, Legs, Sets, "NULL");
+                Game_ID, Mode, Legs, Sets, Pause);
             sql.Execute_SQL(SQL_Text);
 
             // Connect Players to Game

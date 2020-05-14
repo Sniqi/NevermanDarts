@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Neverman Darts App 2020 - Spiel" WindowStyle="ThreeDBorderWindow" BorderThickness="0" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" SizeToContent="WidthAndHeight" Closed="Window_Closed">
     <Grid x:Name="LayoutRoot" Background="Black">
-        <Label x:Name="labelWinnerText" Height="110" Width="1076" FontSize="100" Background="Black" Panel.ZIndex="100" BorderThickness="10" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="418,608,418,451">
+        <Label x:Name="labelWinnerText" FontSize="100" Background="Black" Panel.ZIndex="100" BorderThickness="10" Height="103">
             <Label.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFB0FF61" Offset="0"/>
@@ -20,7 +20,7 @@
                     <GradientStop Color="#FFE2FF62"/>
                 </LinearGradientBrush>
             </Label.BorderBrush>
-            <TextBlock x:Name="textBlockWinnerText" HorizontalAlignment="Center" TextAlignment="Center" FontSize="55" Width="1252" VerticalAlignment="Center">SPIELER hat das Leg gewonnen!</TextBlock>
+            <TextBlock x:Name="textBlockWinnerText" TextAlignment="Center" FontSize="55" VerticalAlignment="Center" HorizontalAlignment="Center" Width="1250">SPIELER hat das Leg gewonnen!</TextBlock>
         </Label>
 
     </Grid>

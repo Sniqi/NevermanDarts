@@ -27,7 +27,8 @@ namespace NevermanDarts
             try
             {
                 string dbName = "NevermanDarts";
-                string outputFolder = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Data");
+                string outputFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),"NevermanDarts");
+                //string outputFolder = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Data");
                 //string outputFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NevermanDarts");
 
                 System.IO.Directory.CreateDirectory(outputFolder);

@@ -32,7 +32,6 @@ namespace NevermanDarts
         private PlayerColumn lastActivePlayer = null;
         private int legStartPlayerID = 0;
         private int activePlayerID = 0;
-        private int dartCount = 3;
 
         private int Game_ID;
         private int Set_ID = -1;
@@ -284,17 +283,10 @@ namespace NevermanDarts
                 i++;
             }
 
-            activePlayerID = 0;
-
-            activePlayer = Players[activePlayerID];
-            lastActivePlayer = Players[activePlayerID];
-
-            SetActivePlayer(Players[activePlayerID]);
-            Players[activePlayerID].SetAsStartingPlayer();
+            SetActiveStartingPlayer(0);
 
             labelWinnerText.Visibility = Visibility.Hidden;
         }
-
 
         public void MakeEntry(int score, int multiplier)
         {
@@ -310,6 +302,8 @@ namespace NevermanDarts
                 Set_ID = DB_Create_Set(1);
                 Leg_ID = DB_Create_Leg(1, GetActivePlayer().GetPlayerID());
                 Shot_ID = DB_Create_Shot(1, GetActivePlayer().GetPlayerID());
+
+                MW.disableNextPlayerButton();
             }
             
             int currentScore = GetActivePlayer().GetPlayerScore();
@@ -389,6 +383,8 @@ namespace NevermanDarts
                         m_mediaPlayer.Open(new Uri(AppDomain.CurrentDomain.BaseDirectory + "\\The Darts Anthem - Chase The Sun.wav"));
                         m_mediaPlayer.Play();
 
+                        MW.Hide();
+
                         return;
                     }
 
@@ -404,7 +400,7 @@ namespace NevermanDarts
                         plyr.ResetLegs();
                     }
 
-                    // Set Pauses
+                    // Set-Pauses
                     int maxSets = (menu.Pause * Players.Count) - (Players.Count - 1);
 
                     List<int> SetPauses = new List<int>();
@@ -466,130 +462,12 @@ namespace NevermanDarts
 
                 Shot_ID = DB_Create_Shot(1, GetActivePlayer().GetPlayerID());
             }
-
-            /*
-
-            if (dartCount == 3)
-            {
-                currentScore = GetActivePlayer().GetPlayerScore();
-            }
-
-            bool trennung = false;
-            if (dartCount == 1)
-            {
-                trennung = true;
-            }
-
-            string result = GetActivePlayer().AddHistoryEntry(score, trennung);
-
-            if (result == "default")
-            {
-                dartCount--;
-
-                if (dartCount == 0)
-                {
-                    if (Players.Count > 1)
-                    {
-                        SetActivePlayer(GetNextPlayer());
-                    }
-                    dartCount = 3;
-                }
-            }
-            else if (result == "bust")
-            {
-                GetActivePlayer().SetPlayerScore(currentScore);
-
-                if (Players.Count > 1)
-                {
-                    SetActivePlayer(GetNextPlayer());
-                }
-
-                dartCount = 3;
-            }
-            else if (result == "leg_won")
-            {
-                textBlockWinnerText.Text = Players[activePlayerID].GetPlayerName().Trim() + " hat das Leg gewonnen!";
-                labelWinnerText.Visibility = Visibility.Visible;
-
-                //MessageBox.Show("Der Spieler " + Players[activePlayerID].GetPlayerName().Trim() + " hat das Leg gewonnen!", "Leg vorbei", MessageBoxButton.OK, MessageBoxImage.Information, 0, MessageBoxOptions.DefaultDesktopOnly);
-
-                if (Players.Count > 1)
-                {
-                    if (legStartPlayerID < Players.Count - 1)
-                    {
-                        legStartPlayerID++;
-                    }
-                    else
-                    {
-                        legStartPlayerID = 0;
-                    }
-                }
-                else
-                {
-                    legStartPlayerID = 0;
-                }
-
-                SetActivePlayer(Players[legStartPlayerID]);
-                dartCount = 3;
-
-                foreach (PlayerColumn plyr in Players)
-                {
-                    plyr.SetPlayerScore(menu.Mode);
-                }
-            }
-            else if (result == "set_won")
-            {
-                textBlockWinnerText.Text = Players[activePlayerID].GetPlayerName().Trim() + " hat das Set gewonnen!";
-                labelWinnerText.Visibility = Visibility.Visible;
-
-                //MessageBox.Show("Der Spieler " + Players[activePlayerID].GetPlayerName().Trim() + " hat das Set gewonnen!", "Set vorbei", MessageBoxButton.OK, MessageBoxImage.Information, 0, MessageBoxOptions.DefaultDesktopOnly);
-
-                if (Players.Count > 1)
-                {
-                    if (legStartPlayerID < Players.Count - 1)
-                    {
-                        legStartPlayerID++;
-                    }
-                    else
-                    {
-                        legStartPlayerID = 0;
-                    }
-                }
-                else
-                {
-                    legStartPlayerID = 0;
-                }
-
-                SetActivePlayer(Players[legStartPlayerID]);
-                dartCount = 3;
-
-                foreach (PlayerColumn plyr in Players)
-                {
-                    plyr.ResetLegs();
-                    plyr.SetPlayerScore(menu.Mode);
-                }
-            }
-            else if (result == "game_won")
-            {
-                textBlockWinnerText.Text = Players[activePlayerID].GetPlayerName().Trim() + " hat das Spiel gewonnen!";
-                labelWinnerText.Visibility = Visibility.Visible;
-
-                //MessageBox.Show("Der Spieler " + Players[activePlayerID].GetPlayerName().Trim() + " hat das Spiel gewonnen!", "Spiel vorbei", MessageBoxButton.OK, MessageBoxImage.Information, 0, MessageBoxOptions.DefaultDesktopOnly);
-
-            }
-
-    */
+            
         }
 
 
         public void UndoLastEntry()
         {
-            /*
-            Set_ID;
-            Leg_ID;
-            Shot_ID;
-            Darts_ID;
-            */
 
             if (GetDartCount() == 1)
             {
@@ -660,9 +538,6 @@ namespace NevermanDarts
             }
             allDarts_str = allDarts_str.TrimEnd(',');
 
-            //SQL_Text = string.Format("SELECT AVG(Value) AS AVG FROM Darts WHERE ID IN ({0})", allDarts_str);
-            //DataTable Table = sql.Read_SQL(SQL_Text);
-
             SQL_Text = string.Format("SELECT Value,Bust FROM Darts WHERE ID IN ({0})", allDarts_str);
             DataTable Table = sql.Read_SQL(SQL_Text);
 
@@ -676,7 +551,6 @@ namespace NevermanDarts
             }
             AVG = AVG / (Table.Rows.Count / 3);
 
-            //return Math.Round(Convert.ToDouble(Table.Rows[0]["AVG"]), 2);
             return AVG;
         }
 
@@ -693,9 +567,6 @@ namespace NevermanDarts
             }
             allDarts_str = allDarts_str.TrimEnd(',');
 
-            //SQL_Text = string.Format("SELECT AVG(Value) AS AVG FROM Darts WHERE ID IN ({0})", allDarts_str);
-            //DataTable Table = sql.Read_SQL(SQL_Text);
-
             SQL_Text = string.Format("SELECT Value,Bust FROM Darts WHERE ID IN ({0})", allDarts_str);
             DataTable Table = sql.Read_SQL(SQL_Text);
 
@@ -709,11 +580,8 @@ namespace NevermanDarts
             }
             AVG = AVG / (Table.Rows.Count / 3);
 
-            //return Math.Round(Convert.ToDouble(Table.Rows[0]["AVG"]), 2);
             return AVG;
         }
-
-
 
 
 
@@ -887,19 +755,45 @@ namespace NevermanDarts
 
         public void NextPlayer()
         {
-            MessageBoxResult result = MessageBoxResult.OK;
-            if (dartCount != 3)
-            {
-                result = MessageBox.Show("Wirklich Spieler wechseln? Der aktuelle Spieler hat noch " + dartCount + " Würfe übrig!", "Spieler wechseln?", MessageBoxButton.OK, MessageBoxImage.Information, 0, MessageBoxOptions.DefaultDesktopOnly);
-            }
+            GetActivePlayer().SetAsInactivePlayer();
 
-            if (result == MessageBoxResult.OK)
+            SetActiveStartingPlayer(GetNextPlayerID());
+
+            // Find new active player
+            if (Players.Count > 1)
             {
-                SetActivePlayer(GetNextPlayer());
-                dartCount = 3;
+                if (legStartPlayerID < Players.Count - 1)
+                {
+                    legStartPlayerID++;
+                }
+                else
+                {
+                    legStartPlayerID = 0;
+                }
+            }
+            else
+            {
+                legStartPlayerID = 0;
             }
         }
 
+        private void SetActiveStartingPlayer(int id)
+        {
+            activePlayerID = id;
+
+            activePlayer = Players[activePlayerID];
+            lastActivePlayer = Players[activePlayerID];
+
+            SetActivePlayer(Players[activePlayerID]);
+            Players[activePlayerID].SetAsStartingPlayer();
+
+            // Adjust starting player visible point
+            foreach (PlayerColumn plyr in Players)
+            {
+                plyr.RemoveAsStartingPlayer();
+            }
+            Players[id].SetAsStartingPlayer();
+        }
 
         private void SetActivePlayer(PlayerColumn pcol)
         {
@@ -938,6 +832,20 @@ namespace NevermanDarts
                 PlayerID = activePlayerID + 1;
             }
             return Players[PlayerID];
+        }
+
+        private int GetNextPlayerID()
+        {
+            int PlayerID = 0;
+            if (activePlayerID == Players.Count - 1)
+            {
+                PlayerID = 0;
+            }
+            else
+            {
+                PlayerID = activePlayerID + 1;
+            }
+            return PlayerID;
         }
 
         private PlayerColumn GetPreviousPlayer()
