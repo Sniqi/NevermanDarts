@@ -307,7 +307,7 @@
         <Slider x:Name="slider_soundVolume" HorizontalAlignment="Left" Margin="998,920,0,0" VerticalAlignment="Top" Height="30" Width="282" Maximum="100" SmallChange="1" TickPlacement="BottomRight" Value="20" TickFrequency="5" LargeChange="10" ValueChanged="slider_soundVolume_ValueChanged" IsSnapToTickEnabled="True"/>
         <Label x:Name="label_sound" Content="Sound" HorizontalAlignment="Left" Margin="998,857,0,0" VerticalAlignment="Top" Foreground="White" FontSize="40"/>
         <Label x:Name="label_soundVolume" Content="20%" HorizontalAlignment="Left" Margin="1275,911,0,0" VerticalAlignment="Top" Foreground="White" FontSize="25"/>
-        <Slider x:Name="slider_pauseLength" HorizontalAlignment="Left" Margin="998,834,0,0" VerticalAlignment="Top" Height="30" Width="282" Maximum="30" SmallChange="0" TickPlacement="BottomRight" Value="5" LargeChange="10" ValueChanged="slider_pauseLength_ValueChanged" IsSnapToTickEnabled="True"/>
+        <Slider x:Name="slider_pauseLength" HorizontalAlignment="Left" Margin="998,834,0,0" VerticalAlignment="Top" Height="30" Width="282" Maximum="30" SmallChange="0" TickPlacement="BottomRight" Value="5" LargeChange="5" ValueChanged="slider_pauseLength_ValueChanged" IsSnapToTickEnabled="True"/>
         <Label x:Name="label_pause" Content="Pause" HorizontalAlignment="Left" Margin="998,771,0,0" VerticalAlignment="Top" Foreground="White" FontSize="40"/>
         <Label x:Name="label_pauseLength" Content="5 min" HorizontalAlignment="Left" Margin="1275,825,0,0" VerticalAlignment="Top" Foreground="White" FontSize="25"/>
     </Grid>

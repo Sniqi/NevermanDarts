@@ -292,5 +292,11 @@ namespace NevermanDarts
                 Application.Current.Shutdown();
             }
         }
+
+        private void button_managePlayers_Click(object sender, RoutedEventArgs e)
+        {
+            ManagePlayers managePlayers = new ManagePlayers(sql);
+            managePlayers.Show();
+        }
     }
 }

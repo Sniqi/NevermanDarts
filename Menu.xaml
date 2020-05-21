@@ -50,6 +50,7 @@
         <TextBox x:Name="textBox_pause" HorizontalAlignment="Left" Height="30" Margin="692,226,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="28" TextAlignment="Center" FontSize="18" Text="2" TabIndex="12"/>
         <Label x:Name="label_pause2" Content="Sets" HorizontalAlignment="Left" Margin="722,220,-39,0" VerticalAlignment="Top" Width="131" FontSize="20"/>
         <Button x:Name="button_deleteDatabase" Content="DB löschen" HorizontalAlignment="Left" Margin="11,507,0,0" VerticalAlignment="Top" Width="115" Height="30" FontSize="14" TabIndex="7" Click="button_deleteDatabase_Click"/>
+        <Button x:Name="button_managePlayers" Content="Spieler verwalten" HorizontalAlignment="Left" Margin="131,459,0,0" VerticalAlignment="Top" Width="115" Height="30" FontSize="14" TabIndex="7" Click="button_managePlayers_Click"/>
 
     </Grid>
 </Window>
